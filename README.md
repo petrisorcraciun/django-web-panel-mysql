@@ -8,7 +8,7 @@ Features:
 - [x] Empty table 
 - [x] The list of all columns for a selected table and details about them
 - [x] Display indexes 
-- [ ] Drop table
+- [x] Drop table
 - [ ] Add columns table
 - [ ] Edit value rows 
 - [ ] Delete row 
