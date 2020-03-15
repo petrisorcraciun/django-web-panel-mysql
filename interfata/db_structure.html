@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Structure {{ dbSelected }} </title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="http://127.0.0.1:8000/interfata/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- Page-Level Plugin CSS - Tables -->
+    <link href="http://127.0.0.1:8000/interfata/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="http://127.0.0.1:8000/interfata/css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">{{ dbSelected }}</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            
+            <!-- /.navbar-top-links -->
+
+            
+
+            <div class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <form onSubmit="return process();">
+                                <div class="input-group custom-search-form">
+                                    <input type="text" class="form-control" placeholder="Add new database..." name="url" id="url">
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit" value="go">
+                                        <i class="fa fa-plus"></i>
+                                    </button></form>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        
+                      
+
+                        {% for nameDB in listDB %}
+                        {% if nameDB.0 == 'information_schema' or nameDB.0 == 'performance_schema' or nameDB.0 == 'mysql' or nameDB.0 == 'phpmyadmin' %}
+                         
+                    {% else %}
+                    <li>
+                            
+                            <a href="/db_structure/?db={{ nameDB.0 }}"><i class="fa fa-database fa-fw"></i> {{ nameDB.0 }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %} 
+
+                       
+                       
+                    </ul>
+                    <!-- /#side-menu -->
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">Database:  <b>{{ dbSelected }}</b></h3>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+
+               
+
+                
+
+                <div class="col-lg-12">
+
+                    {% if message %}
+                    <div class="alert alert-success" role="alert">
+                        {{message}}
+                    </div>
+                    {% endif %}
+
+                    {% if errMessage %}
+                    <div class="alert alert-danger" role="alert">
+                        {{errMessage}}
+                    </div>
+                    {% endif %}
+
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#"> Structure</a></li>
+                        <li><a href="#">SQL</a></li>
+                     
+                      </ul>
+                    <div class="panel panel-default" style="border-radius: 0px">
+                        
+                        
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" class="custom-control-input" id="selectAll"></th>
+                                            <th>Table</th>
+                                            <th>Action</th>
+                                          
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <!--  -->
+
+                                       
+                        {% for tableName in listTables %}
+                        
+                            <tr class="odd gradeX">
+                                <td><input type="checkbox" class="custom-control-input"></td>
+                                <td>  <a href="../db_browse/?db={{ dbSelected }}&table={{ tableName.0 }}"> {{ tableName.0 }} </a></td>
+                                <td>
+                                    <a href="../db_browse/?db={{ dbSelected }}&table={{ tableName.0 }}"> <i class="fa fa-list"></i> Browse </a> / 
+                                    <a href="../structure/?db={{ dbSelected }}&table={{ tableName.0 }}"> <i class="fa fa-sitemap"></i> Structure </a> / 
+                                    <a href="../empty_table/?db={{ dbSelected }}&table={{ tableName.0 }}" onclick="return confirm('You are about to TRUNCATE a complete table! Do you really want to execute ?')"> <i class="fa fa-eraser"></i> Empty </a> / 
+                                    <a href="../db_browse/?db={{ dbSelected }}&table={{ tableName.0 }}">  <font color="red"> <i class="fa fa-trash"></i> Drop	</font></a>
+                                </td>
+                                
+                                
+                            </tr>
+
+                        {% endfor %} 
+                    
+                                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                            
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            
+            <!-- /.row -->
+            
+            <!-- /.row -->
+           
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <script src="http://127.0.0.1:8000/interfata/js/jquery-1.10.2.js"></script>
+    <script src="http://127.0.0.1:8000/interfata/js/bootstrap.min.js"></script>
+    <script src="http://127.0.0.1:8000/interfata/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Tables -->
+    <script src="http://127.0.0.1:8000/interfata/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="http://127.0.0.1:8000/interfata/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="http://127.0.0.1:8000/interfata/js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').dataTable();
+    });
+    function process()
+    {
+        var url = "http://127.0.0.1:8000/db_create/?db=" + document.getElementById("url").value;
+        location.href = url;
+        return false;
+    }
+
+    $(document).ready(function() {
+  var $selectAll = $('#selectAll'); // main checkbox inside table thead
+  var $table = $('.table'); // table selector 
+  var $tdCheckbox = $table.find('tbody input:checkbox'); // checboxes inside table body
+  var tdCheckboxChecked = 0; // checked checboxes
+
+  // Select or deselect all checkboxes depending on main checkbox change
+  $selectAll.on('click', function () {
+    $tdCheckbox.prop('checked', this.checked);
+  });
+
+  // Toggle main checkbox state to checked when all checkboxes inside tbody tag is checked
+  $tdCheckbox.on('change', function(e){
+    tdCheckboxChecked = $table.find('tbody input:checkbox:checked').length; // Get count of checkboxes that is checked
+    // if all checkboxes are checked, then set property of main checkbox to "true", else set to "false"
+    $selectAll.prop('checked', (tdCheckboxChecked === $tdCheckbox.length));
+  })
+});
+    </script>
+
+
+
+</body>
+
+</html>
