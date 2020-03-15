@@ -18,4 +18,5 @@ Features:
 - [ ] Delete database
 
 For the interface I used the theme: https://usebootstrap.com/theme/sb-admin-2
+<br/>
 This is a simple project made to work with the Django framework.
