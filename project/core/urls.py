@@ -26,5 +26,6 @@ urlpatterns = [
     path('db_create/', db_create, name='db_create'),
     path('empty_table/', empty_table, name='empty_table'),
     path('drop_table/', drop_table, name='drop_table'),
+    path('newColumn/', newColumn, name='newColumn'),
 
 ]

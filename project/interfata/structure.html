@@ -32,7 +32,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">{{ tabelName }}</a>
+                <a class="navbar-brand" href="/" id="tabelName">{{ tabelName }}</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -87,6 +87,17 @@
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
+                    {% if message %}
+                    <div class="alert alert-success" role="alert">
+                        {{message}}
+                    </div>
+                    {% endif %}
+
+                    {% if errMessage %}
+                    <div class="alert alert-danger" role="alert">
+                        {{errMessage}}
+                    </div>
+                    {% endif %}
                     <ul class="nav nav-tabs">
                         <li class=""><a href="../db_browse/?db={{ databaseName }}&table={{ tabelName }}">  Browse </a></li>
                         <li class="active"><a href="../structure/?db={{ databaseName }}&table={{ tabelName }}"> Structure</a></li>
@@ -145,16 +156,19 @@
                         <div class="panel-heading">ADD COLUMN</div>
                         <div class="panel-body">
                             <div class="row">
+                                <form onSubmit="return addColumn();">
+                                    <input type="text" class="form-control" style="display:none" id="tableName" name="tableName" placeholder="" value={{ tabelName }}>
+                                    <input type="text" class="form-control " style="display:none" id="db" name="db" placeholder="" value={{ databaseName }}>
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="email" class="form-control" id="name" placeholder="">
+                                        <input type="text" class="form-control" id="nameColumn" name="name" placeholder="">
                                       </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                    <label for="type">Type </label>
-                                    <select name="" class="form-control" id="type">
+                                    <label for="typeColumn">Type </label>
+                                    <select name="typeColumn" class="form-control" id="typeColumn">
                                         {% for data in dataType %}
                                             <option value="{{ data.0 }}"> {{ data.0 }} </option>
                                         {% endfor %}
@@ -163,27 +177,26 @@
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <label for="length">Length</label>
-                                        <input type="number" class="form-control" id="length" placeholder="">
+                                        <label for="lengthColumn">Length</label>
+                                        <input type="number" class="form-control" id="lengthColumn" placeholder="">
                                       </div>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <label for="null">NULL</label><br>
-                                        <input type="checkbox" id="null" name="null" style="margin: 10px">
+                                        <label for="nullColumn">NULL</label><br>
+                                        <input type="checkbox" id="nullColumn" name="nullColumn" style="margin: 10px">
                                       </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label for="null">Index</label><br>
-                                        <select name="" id="" class="form-control">
-                                            <option value="">Primary key</option>
-                                        </select>
+                                        <label for="defaultValue">Default</label>
+                                        <input type="text" class="form-control" id="defaultValue" placeholder="">
                                       </div>
                                 </div>
                                 <div class="col-md-2" style="margin-top: 22px">
-                                    <button type="button" class="btn btn-primary">ADD COLUMN</button>
+                                    <button type="submit" class="btn btn-primary" value="go">ADD COLUMN</button>
                                 </div>
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -268,6 +281,19 @@
     function process()
     {
         var url = "http://127.0.0.1:8000/db_create/?db=" + document.getElementById("url").value;
+        location.href = url;
+        return false;
+    }
+
+    function addColumn()
+    {
+        var url = "http://127.0.0.1:8000/newColumn?db=" + document.getElementById("db").value + 
+        "&table=" + document.getElementById("tableName").value + 
+        "&nameColumn=" + document.getElementById("nameColumn").value +  
+        "&typeColumn=" + document.getElementById("typeColumn").value +
+        "&lengthColumn=" + document.getElementById("lengthColumn").value +
+        "&nullColumn=" + document.getElementById("nullColumn").value +
+        "&defaultValue=" + document.getElementById("defaultValue").value ; 
         location.href = url;
         return false;
     }

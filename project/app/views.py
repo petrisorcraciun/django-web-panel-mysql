@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 import mysql.connector
 import array as arr
 import socket 
@@ -42,6 +43,7 @@ def index(request):
     result = listDatabases.fetchall()
 
     nrDatabases = listDatabases.rowcount
+
 
     return render(request, 'index.html',
     {
@@ -211,29 +213,35 @@ def checkIfDatabaseExists(databaseName):
    
     return False
 
+def listDataType():
+    conn3 = connection()
+    data = conn3.cursor()
+    data.execute("SELECT DISTINCT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS ORDER BY DATA_TYPE ASC")
+    dataType = data.fetchall()
+    return dataType
+
+def descTable(databaseName,tabelName):
+    conn = connectionDB(databaseName)
+    mycursor = conn.cursor()
+    mycursor.execute("DESC " + tabelName)
+    records = mycursor.fetchall()
+    return records
+
+def listIndexes(databaseName,tabelName):
+    conn2 = connectionDB(databaseName)
+    indexesM = conn2.cursor()
+    indexesM.execute("SHOW INDEXES FROM " + tabelName)
+    indexes = indexesM.fetchall()
+    return indexes
 
 
 def structure(request):
     databaseName = request.GET['db']
     tabelName = request.GET['table']
 
-    conn = connectionDB(databaseName)
-    mycursor = conn.cursor()
-    mycursor.execute("DESC " + tabelName)
-
-    conn2 = connectionDB(databaseName)
-    indexesM = conn2.cursor()
-    indexesM.execute("SHOW INDEXES FROM " + tabelName)
-
-    indexes = indexesM.fetchall()
-    records = mycursor.fetchall()
-
-    conn3 = connection()
-    data = conn3.cursor()
-    data.execute("SELECT DISTINCT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS ORDER BY DATA_TYPE ASC")
-
-    dataType = data.fetchall()
-    
+    indexes = listIndexes(databaseName,tabelName)
+    records = descTable(databaseName,tabelName)
+    dataType = listDataType()
     listDB = listDBMethod()
     listTables = listTablesMethod(databaseName)
 
@@ -262,6 +270,7 @@ def drop_table(request):
         mycursor = conn.cursor()
         mycursor.execute("DROP TABLE " + tableName)
         message = "The table " + tableName + " was successfully deleted."
+
     except:
         errMessage = "Cannot DROP a table referenced in a foreign key constraint."
 
@@ -273,6 +282,54 @@ def drop_table(request):
        'listDB':  listDB,
        'listTables': listTables,
        'dbSelected': databaseName,
+       'message': message,
+       'errMessage': errMessage
+       
+    })
+
+def newColumn(request):
+    databaseName = request.GET['db']
+    tabelName = request.GET['table']
+
+    nameColumn = request.GET['nameColumn']
+    typeColumn = request.GET['typeColumn']
+    lengthColumn = request.GET['lengthColumn']
+    nullColumn = request.GET['nullColumn']
+    defaultValue = request.GET['defaultValue']
+
+    message = ""
+    errMessage = ""
+    if nullColumn == "on":
+        nullColumn = "NULL"
+    else: 
+        nullColumn = "NOT NULL"
+
+    try:
+        conn = connectionDB(databaseName)
+        mycursor = conn.cursor()
+        sql = "ALTER TABLE " + tabelName + " ADD COLUMN " + nameColumn + " " + typeColumn + "(" + lengthColumn + ") " + nullColumn
+        if defaultValue:
+            sql += " DEFAULT '" + defaultValue +"'"
+        mycursor.execute(sql)
+        message = ""
+    except:
+        errMessage = "Column " + nameColumn + " exists."
+
+    indexes = listIndexes(databaseName,tabelName)
+    records = descTable(databaseName,tabelName)
+    dataType = listDataType()
+    listDB = listDBMethod()
+    listTables = listTablesMethod(databaseName)
+
+    return render(request, 'structure.html',
+    {
+       'listDB':  listDB,
+       'listTables': listTables,
+       'databaseName': databaseName,
+       'records': records,
+       'tabelName': tabelName,
+       'indexes': indexes,
+       'dataType': dataType,
        'message': message,
        'errMessage': errMessage
        

@@ -9,7 +9,7 @@ Features:
 - [x] The list of all columns for a selected table and details about them
 - [x] Display indexes 
 - [x] Drop table
-- [ ] Add columns table
+- [x] Add columns table
 - [ ] Edit value rows 
 - [ ] Delete row 
 - [ ] Insert new row in table
