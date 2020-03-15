@@ -163,23 +163,28 @@ def db_create(request):
 def empty_table(request):
     databaseName = request.GET['db']
     tableName = request.GET['table']
+    message = ""
+    errMessage = ""
 
-    conn = connectionDB(databaseName)
+    try:
+        conn = connectionDB(databaseName)
 
-    mycursor = conn.cursor()
-    mycursor.execute("TRUNCATE TABLE " + tableName)
+        mycursor = conn.cursor()
+        mycursor.execute("TRUNCATE TABLE " + tableName)
+        message = "All records in the table have been deleted."
+    except:
+        errMessage = "Cannot truncate a table referenced in a foreign key constraint."
 
     listTables = listTablesMethod(databaseName)
     listDB = listDBMethod()
-
-    message = "All records in the table have been deleted."
 
     return render(request, 'db_structure.html',
     {
        'listDB':  listDB,
        'listTables': listTables,
        'dbSelected': databaseName,
-       'message': message
+       'message': message,
+       'errMessage': errMessage
        
     })
 
@@ -241,5 +246,34 @@ def structure(request):
        'tabelName': tabelName,
        'indexes': indexes,
        'dataType': dataType
+       
+    })
+
+
+def drop_table(request):
+    databaseName = request.GET['db']
+    tableName = request.GET['table']
+    message = ""
+    errMessage = ""
+
+    try:
+        conn = connectionDB(databaseName)
+
+        mycursor = conn.cursor()
+        mycursor.execute("DROP TABLE " + tableName)
+        message = "The table " + tableName + " was successfully deleted."
+    except:
+        errMessage = "Cannot DROP a table referenced in a foreign key constraint."
+
+    listTables = listTablesMethod(databaseName)
+    listDB = listDBMethod()
+
+    return render(request, 'db_structure.html',
+    {
+       'listDB':  listDB,
+       'listTables': listTables,
+       'dbSelected': databaseName,
+       'message': message,
+       'errMessage': errMessage
        
     })

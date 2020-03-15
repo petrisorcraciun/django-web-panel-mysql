@@ -1,4 +1,4 @@
-""" URL Configuration
+"""proiectSGBD URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -25,4 +25,6 @@ urlpatterns = [
     path('db_browse/', db_browse, name='db_browse'),
     path('db_create/', db_create, name='db_create'),
     path('empty_table/', empty_table, name='empty_table'),
+    path('drop_table/', drop_table, name='drop_table'),
+
 ]
