@@ -1,4 +1,4 @@
-# django-web-panel-mysql
+# DJANGO Web Panel for Mysql
 
 Features:
 
@@ -13,3 +13,5 @@ Features:
 - [ ] Edit value rows 
 - [ ] Delete row 
 - [ ] Insert new row table
+
+For the interface I used the theme: https://usebootstrap.com/theme/sb-admin-2
