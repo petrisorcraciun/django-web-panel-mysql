@@ -23,6 +23,6 @@ This is a simple project made to work with the Django framework.
 
 <h6> Images: </h6> 
 
-<img src="https://raw.githubusercontent.com/petrisorcraciun/django-web-panel-mysql/master/images/1.PNG" height="300px" />
+<img src="https://raw.githubusercontent.com/petrisorcraciun/django-web-panel-mysql/master/images/5.png" height="300px" />
 <img src="https://raw.githubusercontent.com/petrisorcraciun/django-web-panel-mysql/master/images/2.png" height="300px" />
 <img src="https://raw.githubusercontent.com/petrisorcraciun/django-web-panel-mysql/master/images/4.png" height="300px" />
